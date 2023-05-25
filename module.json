@@ -1,0 +1,15 @@
+{
+  "id": "yzsrd-roller",
+  "title": "Year Zero Dice Roller",
+  "description": "A general module to support the dice roll mechanics from the Year Zero SRD.",
+  "authors": [
+    {
+    "name": "Cannyjack"
+    }
+    ],
+  "version": "0.1",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10"
+  }
+}

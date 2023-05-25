@@ -17,13 +17,16 @@ export class YZRoll {
 
     // For step dice, the value corresponds to the die: 0 = none, 1= d6, 2 = d8, 3 = d10, 4 = d12
     // For dice pools, the value is the number of dice to roll, e.g. 3 = 3d6
-
+    successes = 0;
+    banes = 0;
     dmgDice = 0;
     statDice = 0;
     skillDice = 0;
     gearDice = 0;
     artDice = 0;
     pushed = false;
+    diceDisplay = "";
+
 
     constructor(data) {
         this.statDice = data.statDice;
@@ -90,10 +93,13 @@ export class YZRoll {
 
                     if(resultObject[k][d] == 1) {
                         this.sb[k][1] += 1;
+                        this.banes += 1;
                     } else if (resultObject[k][d] >= 6 && resultObject[k][d] < 10) {
                         this.sb[k][0] += 1;
+                        this.successes += 1;
                     } else if (resultObject[k][d] >= 10) {
                         this.sb[k][0] += 2;
+                        this.successes += 2;
                     }
                 }
 
@@ -101,14 +107,17 @@ export class YZRoll {
         } else if (rollMode == 1) {
 
             keyArray.forEach(k => {
-                
+
                 resultObject[k].forEach(r => {
                     if(r == 1) { 
                         this.sb[k][1] += 1;
+                        this.banes += 1;
                     } else if (r >= 6 && r < 10) {
                         this.sb[k][0] += 1;
+                        this.successes += 1;
                     } else if (r >= 10) {
                         this.sb[k][0] += 2;
+                        this.successes += 2;
                     }
 
                 })

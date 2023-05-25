@@ -1,5 +1,5 @@
 {
-  "id": "yzsrd-roller",
+  "id": "yzsrd",
   "title": "Year Zero Dice Roller",
   "description": "A general module to support the dice roll mechanics from the Year Zero SRD.",
   "authors": [
@@ -11,5 +11,8 @@
   "compatibility": {
     "minimum": "10",
     "verified": "10"
-  }
+  },
+  "scripts":[
+    "scripts/yzsrd.js"
+  ]
 }

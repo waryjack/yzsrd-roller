@@ -1,4 +1,4 @@
-import { YZRoll } from "./yzroll.js";
+import { YZHandler } from "./yzhandler.js";
 
 console.log("Hello World! This code runs immediately when the file is loaded.");
 
@@ -11,7 +11,7 @@ Hooks.once("ready", function() {
 
   const diceIconSelector = '#chat-controls i.fas.fa-dice-d20';
     $(document).on('click', diceIconSelector, () => { 
-        YZRoll.rollDice();
+        YZHandler.launchRoll();
     });
 
 });
@@ -19,7 +19,10 @@ Hooks.once("ready", function() {
 Hooks.on('renderChatMessage', (app, html) => {
 
     html.on('click', '.push-roll', event => {
-        YZRoll.pushRoll();
+
+        // get roll data from chat message
+        YZHandler.pushRoll(roll);
+        
      });
 
 });

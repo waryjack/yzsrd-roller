@@ -1,21 +1,24 @@
 export class YZRoll {
 
+    rollResults = {
+        base:{},
+        skill:{},
+        gear:{},
+        artifact:{}
+    }
+    
+    sb = {
+        base: [0,0],
+        skill:[0,0],
+        gear:[0,0],
+        artifact: [0,0] 
+    }
+
+    dmgDice = [];
     statDice = [];
-    statVals = {};
     skillDice = [];
-    skillVals = {};
     gearDice = [];
-    gearVals = {};
     artDice = [];
-    artVals = {};
-    statSux = 0;
-    statBanes = 0;
-    skillSux = 0;
-    skillBanes = 0;
-    gearSux = 0;
-    gearBanes = 0;
-    artSux = 0;
-    artBanes = 0;
     pushed = false;
 
     constructor(data) {
@@ -26,32 +29,34 @@ export class YZRoll {
         this.dmgDice = data.dmgDice;
     }
 
-    rollDice() {
+    doRoll() {
 
             // Stat Dice Results
             this.statDice.forEach(s => {
                 let sr = new Roll(d);
                 sr.evaluate({async:false});
-                this.statVals[d] = sr.total;
+                this.rollResults.base[d] = sr.total;
             });
 
             this.skillDice.forEach(k => {
                 let kr = new Roll(k);
                 kr.evaluate({async:false});
-                this.skillVals[k] = kr.total;
+                this.rollResults.base[k] = kr.total;
             });
 
             this.gearDice.forEach(g => {
                 let gr = new Roll(g);
                 gr.evaluate({async:false});
-                this.gearVals[g] = gr.total;
+                this.rollResults.base[g] = gr.total;
             });
 
             this.artDice.forEach(a => {
                 let ar = new Roll(a);
                 ar.evaluate({async:false});
-                this.artVals[a] = ar.total;
+                this.rollResults.artifact[a] = ar.total;
             });
+
+            parseSuccesses();
         
     }
 
@@ -87,47 +92,28 @@ export class YZRoll {
             }
         }
 
+        parseSuccesses();
     }
 
      //Determine number of successes, banes, and assemble an array including only dice that remain pushable
      parseSuccess() {
 
-            for (const s in this.statVals) {
-                if (this.statVals[s] == 1) {
-                    this.statBanes += 1;
-                } else if (this.statVals[s] >= 6 && this.statVals[s] < 10) {
-                    this.statSux += 1;
-                } else if (this.statVals[s] >= 10) {
-                    this.statSux += 2;
+            let keyArray = ["base", "skill", "gear", "artifact"];
+
+            keyArray.forEach(k => {
+
+                for (const d in this.rollResults[k]) {
+
+                    if(this.rollResults[k][d] == 1) {
+                        this.sb[k][1] += 1;
+                    } else if (this.rollResults[k][d] >= 6 && this.rollResults[k][d] < 10) {
+                        this.sb[k][0] += 1;
+                    } else if (this.rollResults[k][d] >= 10) {
+                        this.sb[k][0] += 2;
+                    }
                 }
-            }
-            for (const s in this.skillVals) {
-                if (this.skillVals[s] == 1) {
-                    this.skillBanes += 1;
-                } else if (this.skillVals[s] >= 6 && this.skillVals[s] < 10) {
-                    this.skillSux += 1;
-                } else if (this.skillVals[s] >= 10) {
-                    this.skillSux += 2;
-                }
-            }
-            for (const s in this.gearVals) {
-                if (this.gearVals[s] == 1) {
-                    this.gearBanes += 1;
-                } else if (this.gearVals[s] >= 6 && this.gearVals[s] < 10) {
-                    this.gearSux += 1;
-                } else if (this.gearVals[s] >= 10) {
-                    this.gearSux += 2;
-                }
-            }
-            for (const s in this.artVals) {
-                if (this.artVals[s] == 1) {
-                    this.artBanes += 1;
-                } else if (this.artVals[s] >= 6 && this.artVals[s] < 10) {
-                    this.artSux += 1;
-                } else if (this.artVals[s] >= 10) {
-                    this.artSux += 2;
-                }
-            }
+
+            });
 
      }
  

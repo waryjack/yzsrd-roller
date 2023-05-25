@@ -11,7 +11,7 @@ Hooks.once("ready", function() {
 
   const diceIconSelector = '#chat-controls i.fas.fa-dice-d20';
     $(document).on('click', diceIconSelector, () => { 
-        YZRoll.prompt();
+        YZRoll.rollDice();
     });
 
 });
@@ -19,7 +19,7 @@ Hooks.once("ready", function() {
 Hooks.on('renderChatMessage', (app, html) => {
 
     html.on('click', '.push-roll', event => {
-        YZRoll.push();
+        YZRoll.pushRoll();
      });
 
 });

@@ -102,7 +102,7 @@ export class YZHandler {
                                 sb: sb,
                                 successes: sux,
                                 banes: banes,
-                                isPush: false
+                                isPush: push
                             }
 
                             YZHandler.createChatMessage(msgData);

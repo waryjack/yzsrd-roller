@@ -1,0 +1,22 @@
+{{log "Roll received by template: " roll}}
+<form class="yzsrd roll-dialog">
+ <header class="roll-header taskroll-info">
+        <h1>Stepdice Roll</h1>
+</header>
+<div class="taskroll-msg">
+    <p> 
+    <b>Base Dice:</b> {{statResult}}
+    </p>
+    <p><b>Skill Dice: </b>{{skillResult}}</p>
+    <p><b>Gear Dice: </b>{{gearResult}}</p>
+    <p><b>Artifact Dice: </b>{{artifactResult}}</p>
+    <hr>
+    <p>SUCCESSES: {{successes}}</p>
+    <p>BANES: {{banes}}</p>
+    <hr>
+    <a data-roll-id='{{roll}}'
+    
+        id="pushRoll" title="Push This Roll"><i class="fas fa-fist-raised"></i>
+    </a>
+</div>
+</form>

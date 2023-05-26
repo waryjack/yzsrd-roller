@@ -2,10 +2,10 @@ export class YZRoll {
 
 
     rollResults = {
-        base,
-        skill,
-        gear,
-        artifact
+        base:[],
+        skill:[],
+        gear:[],
+        artifact:[]
     }
     
     sb = {
@@ -24,16 +24,37 @@ export class YZRoll {
     skillDice = 0;
     gearDice = 0;
     artDice = 0;
-    pushed = false;
+    isPush = false;
     diceDisplay = "";
+    evaluatedRoll = null;
 
 
-    constructor(data) {
-        this.statDice = data.statDice;
-        this.skillDice = data.skillDice;
-        this.gearDice = data.gearDice;
-        this.artDice = data.artDice;
-        this.dmgDice = data.dmgDice;
+    constructor(data, push) {
+        console.log("Is this a push? ", push);
+        console.log(data); 
+
+        if(!push) {
+            this.statDice = data.statDice;
+            this.skillDice = data.skillDice;
+            this.gearDice = data.gearDice;
+            this.artDice = data.artDice;
+            this.dmgDice = data.dmgDice;
+        } else {
+            this.statDice = data.statDice;
+            this.skillDice = data.skillDice;
+            this.gearDice = data.gearDice;
+            this.artDice = data.artDice;
+            this.dmgDice = data.dmgDice;
+
+
+
+            this.rollResults = data.rollResults;
+
+            this.sb = data.sb;
+            this.successes = data.successes;
+            this.banes = data.banes;
+            this.isPush = true;
+        }
     }
 
    
@@ -43,26 +64,29 @@ export class YZRoll {
      */
     pushRoll() {
 
+        this.successes = 0;
+        console.log("the pushed roll: ", this);
+        let rollMode = 0;
         let keyArray = ["base", "skill", "gear", "artifact"];
         let res = this.rollResults;
 
         if(rollMode == 0) {
             keyArray.forEach(k => {
 
-                for (const d in res[k]) {
-                    // so the keys in res.base, res.skill, etc.
-                    rerollExpr = d;
-                    if(res[k][d] == 1) {
+                    let rerollExpr = res[k][0];
+                    if(res[k][1] == 1) {
                         //do nothing
                     } else {
                         let reroll = new Roll(rerollExpr).evaluate({async:false});
-                        res[k][d] = reroll.total;
+                        res[k][1] = reroll.total;
                     }
-                }
+                
 
             });
 
+            console.log("REsults after push: ", res);
             this.rollResults = res;
+            this.isPush = true;
 
         } else if (rollMode == 1) {
 
@@ -77,33 +101,30 @@ export class YZRoll {
             return;
         }
 
-        _parseSuccesses();
+        this._parseSuccess(res);
 
     }
 
      //Determine number of successes, banes, and assemble an array including only dice that remain pushable
      _parseSuccess(resultObject) {
-        
+        let rollMode = 0;
         let keyArray = ["base", "skill", "gear", "artifact"];
         if(rollMode == 0) {
 
             keyArray.forEach(k => {
 
-                for (const d in resultObject[k]) {
-
-                    if(resultObject[k][d] == 1) {
+                    if(resultObject[k][1] == 1) {
                         this.sb[k][1] += 1;
                         this.banes += 1;
-                    } else if (resultObject[k][d] >= 6 && resultObject[k][d] < 10) {
+                    } else if (resultObject[k][1] >= 6 && resultObject[k][1] < 10) {
                         this.sb[k][0] += 1;
                         this.successes += 1;
-                    } else if (resultObject[k][d] >= 10) {
+                    } else if (resultObject[k][1] >= 10) {
                         this.sb[k][0] += 2;
                         this.successes += 2;
                     }
-                }
+                });
 
-            });
         } else if (rollMode == 1) {
 
             keyArray.forEach(k => {
@@ -133,10 +154,10 @@ export class YZRoll {
 
      doStepRoll() {
         
-        let statExpr = _getDieExpression(this.statDice);
-        let skillExpr = _getDieExpression(this.skillDice);
-        let gearExpr = _getDieExpression(this.gearDice);
-        let artExpr = _getDieExpression(this.artDice);
+        let statExpr = this.getDieExpression(this.statDice);
+        let skillExpr = this.getDieExpression(this.skillDice);
+        let gearExpr = this.getDieExpression(this.gearDice);
+        let artExpr = this.getDieExpression(this.artDice);
 
         let statRoll = [new Roll(statExpr).evaluate({async:false}).total];
         let skillRoll = [new Roll(skillExpr).evaluate({async:false}).total];
@@ -144,20 +165,24 @@ export class YZRoll {
         let artifactRoll = [new Roll(artExpr).evaluate({async:false}).total];
        
         let res = {
-            base:{},
-            skill:{},
-            gear:{},
-            artifact:{}
+            base:[],
+            skill:[],
+            gear:[],
+            artifact:[]
         };
 
-        res.base[statExpr] = statRoll;
-        res.skill[skillExpr] = skillRoll;
-        res.gear[gearExpr] = gearRoll;
-        res.artifact[artExpr] = artifactRoll;
+        res.base[0] = statExpr;
+        res.base[1] = statRoll;
+        res.skill[0]= skillExpr;
+        res.skill[1] = skillRoll;
+        res.gear[0] = gearExpr;
+        res.gear[1] = gearRoll;
+        res.artifact[0] = artExpr;
+        res.artifact[1] = artifactRoll
         
         this.rollResults = res;
 
-        _parseSuccess(res);
+        this._parseSuccess(res);
      }
 
      
@@ -187,11 +212,11 @@ export class YZRoll {
 
         this.rollResults = res;
 
-        _parseSuccesses(res);
+        this._parseSuccess(res);
 
      }
  
-     _getDieExpression(dieCode) {
+     getDieExpression(dieCode) {
             let expr = "None";
             switch(dieCode) {
                 case 0: break;

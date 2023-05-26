@@ -11,6 +11,9 @@ Hooks.once("ready", function() {
 
   const diceIconSelector = '#chat-controls i.fas.fa-dice-d20';
     $(document).on('click', diceIconSelector, () => { 
+        
+        console.log("clicked it");
+
         YZHandler.launchRoll();
     });
 
@@ -18,8 +21,10 @@ Hooks.once("ready", function() {
 
 Hooks.on('renderChatMessage', (app, html) => {
 
-    html.on('click', '.push-roll', event => {
-
+    html.on('click', '#pushRoll', event => {
+        event.preventDefault();
+        let element = event.currentTarget;
+        let roll = element.dataset.rollId;
         // get roll data from chat message
         YZHandler.pushRoll(roll);
         

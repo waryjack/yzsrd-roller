@@ -1,9 +1,12 @@
 import { YZHandler } from "./yzhandler.js";
+import { registerSettings } from "./settings.js";
 
 console.log("Hello World! This code runs immediately when the file is loaded.");
 
 Hooks.on("init", function() {
   console.log("This code runs once the Foundry VTT software begins its initialization workflow.");
+
+  registerSettings();
 });
 
 Hooks.once("ready", function() {

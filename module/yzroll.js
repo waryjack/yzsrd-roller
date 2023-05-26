@@ -27,6 +27,7 @@ export class YZRoll {
     isPush = false;
     diceDisplay = "";
     evaluatedRoll = null;
+    stepDice = false;
 
 
     constructor(data, push) {
@@ -39,13 +40,14 @@ export class YZRoll {
             this.gearDice = data.gearDice;
             this.artDice = data.artDice;
             this.dmgDice = data.dmgDice;
+            this.stepDice =  game.settings.get("yzsrd-roller", "stepDice");
         } else {
             this.statDice = data.statDice;
             this.skillDice = data.skillDice;
             this.gearDice = data.gearDice;
             this.artDice = data.artDice;
             this.dmgDice = data.dmgDice;
-
+            this.stepDice =  game.settings.get("yzsrd-roller", "stepDice");
 
 
             this.rollResults = data.rollResults;
@@ -67,11 +69,11 @@ export class YZRoll {
         this.successes = 0;
         this.banes = 0;
         console.log("the pushed roll: ", this);
-        let rollMode = 0;
+       
         let keyArray = ["base", "skill", "gear", "artifact"];
         let res = this.rollResults;
 
-        if(rollMode == 0) {
+        if(this.stepDice) {
             keyArray.forEach(k => {
 
                     let rerollExpr = res[k][0];
@@ -89,18 +91,35 @@ export class YZRoll {
             this.rollResults = res;
             this.isPush = true;
 
-        } else if (rollMode == 1) {
-
-         //dice pool push here
-
-
-
-
-
         } else {
-            console.log("Unknown roll mode!")
-            return;
+
+            keyArray.forEach(k => {
+
+                // let rerollExpr = res[k][0];
+                
+                res[k].forEach(v => {
+                    if(res[k].indexOf(v) == 0) {
+                        //do nothing
+                    } else if(v == 1 || v == "-") {
+                        //do nothing
+                    } else {
+                        let reroll = new Roll("1d6").evaluate({async:false});
+                        let loc = res[k].indexOf(v);
+                        res[k][loc] = reroll.result;
+                        
+                    }
+
+
+                });
+               
+            });    
+            
+
         }
+
+        console.log("REsults after push: ", res);
+        this.rollResults = res;
+        this.isPush = true;
 
         this._parseSuccess(res);
 
@@ -108,9 +127,9 @@ export class YZRoll {
 
      //Determine number of successes, banes, and assemble an array including only dice that remain pushable
      _parseSuccess(resultObject) {
-        let rollMode = 0;
+        let rollMode = 1;
         let keyArray = ["base", "skill", "gear", "artifact"];
-        if(rollMode == 0) {
+        if(this.stepDice) {
 
             keyArray.forEach(k => {
 
@@ -128,12 +147,14 @@ export class YZRoll {
                     }
                 });
 
-        } else if (rollMode == 1) {
+        } else {
 
             keyArray.forEach(k => {
 
                 resultObject[k].forEach(r => {
-                    if(r == 1) { 
+                    if(resultObject[k].indexOf(r) == 0) {
+                        //do nothing, this is the die formula
+                    } else if(r == 1) { 
                         this.sb[k][1] += 1;
                         this.banes += 1;
                     } else if (r >= 6 && r < 10) {
@@ -218,6 +239,7 @@ export class YZRoll {
 
         let str = new Roll(this.statDice+"d6");
         str.evaluate({async:false});
+        console.log("Basic Roll: ", str); 
         let skr = new Roll(this.skillDice+"d6");
         skr.evaluate({async:false});
         let gr = new Roll(this.gearDice+"d6");
@@ -225,10 +247,17 @@ export class YZRoll {
         let ar = new Roll(this.artDice+"d6");
         ar.evaluate({async:false});
 
-        let statRolls = str.result.split(" + ");
-        let skillRolls = skr.result.split(" + ");
-        let gearRolls = gr.result.split(" + ");
-        let artRolls = ar.result.split(" + ");
+        console.log("statRolls result: ", str.terms[0].values);
+
+        let statRolls = str.terms[0].values; // str.result.split(" + ");
+        let skillRolls = skr.terms[0].values;
+        let gearRolls = gr.terms[0].values;
+        let artRolls = ar.terms[0].values;
+
+        statRolls.unshift(str.formula);
+        skillRolls.unshift(skr.formula);
+        gearRolls.unshift(gr.formula);
+        artRolls.unshift(ar.formula);
 
         let res = {
             base:statRolls,

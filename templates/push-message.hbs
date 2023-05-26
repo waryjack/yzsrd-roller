@@ -1,17 +1,16 @@
 <form class="yzsrd roll-dialog">
  <header class="roll-header taskroll-info">
-        <h1>PUSHED ROLL</h1>
+        <h1>Pushed Roll Results</h1>
 </header>
 <div class="taskroll-msg">
     <p> 
-    <b>Base Dice:</b> {{statResult}}
+    <b>Base Dice ({{statDie}}):</b> {{statResult}}
     </p>
-    <p><b>Skill Dice: </b>{{skillResult}}</p>
-    <p><b>Gear Dice: </b>{{gearResult}}</p>
-    <p><b>Artifact Dice: </b>{{artifactResult}}</p>
+    <p><b>Skill Dice ({{skillDie}}): </b>{{skillResult}}</p>
+    <p><b>Gear Dice ({{gearDie}}): </b>{{gearResult}}</p>
+    <p><b>Artifact Dice ({{artifactDie}}): </b>{{artifactResult}}</p>
     <hr>
-    <p>SUCCESSES: {{successes}}</p>
-    <p>BANES: {{banes}}</p>
+    <p>SUCCESSES: {{successes}} || BANES: {{banes}}</p>
 
 </div>
 </form>

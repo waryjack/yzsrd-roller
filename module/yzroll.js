@@ -75,7 +75,7 @@ export class YZRoll {
             keyArray.forEach(k => {
 
                     let rerollExpr = res[k][0];
-                    if(res[k][1] == 1) {
+                    if(res[k][1] == 1 || res[k][1] == "-") {
                         //do nothing
                     } else {
                         let reroll = new Roll(rerollExpr).evaluate({async:false});
@@ -123,6 +123,8 @@ export class YZRoll {
                     } else if (resultObject[k][1] >= 10) {
                         this.sb[k][0] += 2;
                         this.successes += 2;
+                    } else if (resultObject[k][1] == "-") {
+                        // do nothing, count nothing
                     }
                 });
 
@@ -159,11 +161,35 @@ export class YZRoll {
         let skillExpr = this.getDieExpression(this.skillDice);
         let gearExpr = this.getDieExpression(this.gearDice);
         let artExpr = this.getDieExpression(this.artDice);
+        let statRoll = 0;
+        let skillRoll = 0;
+        let gearRoll = 0;
+        let artifactRoll = 0;
 
-        let statRoll = [new Roll(statExpr).evaluate({async:false}).total];
-        let skillRoll = [new Roll(skillExpr).evaluate({async:false}).total];
-        let gearRoll = [new Roll(gearExpr).evaluate({async:false}).total];
-        let artifactRoll = [new Roll(artExpr).evaluate({async:false}).total];
+        if (statExpr != "None") {
+            statRoll = [new Roll(statExpr).evaluate({async:false}).total];
+        } else {
+            statRoll = "-"
+        }
+
+        if (skillExpr != "None") {
+            skillRoll = [new Roll(skillExpr).evaluate({async:false}).total];
+        } else {
+            skillRoll = "-"
+        }
+
+        if(gearExpr != "None") {
+            gearRoll = [new Roll(gearExpr).evaluate({async:false}).total];
+        } else {
+            gearRoll = "-"
+        }
+
+        if(artExpr != "None") {
+            artifactRoll = [new Roll(artExpr).evaluate({async:false}).total];
+        } else {
+            artifactRoll = "-"
+        }
+        
        
         let res = {
             base:[],

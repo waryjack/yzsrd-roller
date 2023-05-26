@@ -33,6 +33,10 @@ export class YZHandler {
 
                             let msgData = {
                                 roll: pushedRoll,
+                                statDie: outcome.base[0],
+                                skillDie: outcome.skill[0],
+                                gearDie: outcome.gear[0],
+                                artifactDie: outcome.artifact[0],
                                 statResult: outcome.base[1],
                                 skillResult: outcome.skill[1],
                                 gearResult: outcome.gear[1],
@@ -87,6 +91,10 @@ export class YZHandler {
 
                             let msgData = {
                                 roll: JSON.stringify(thisRoll),
+                                statDie: outcome.base[0],
+                                skillDie: outcome.skill[0],
+                                gearDie: outcome.gear[0],
+                                artifactDie: outcome.artifact[0],
                                 statResult: outcome.base[1],
                                 skillResult: outcome.skill[1],
                                 gearResult: outcome.gear[1],

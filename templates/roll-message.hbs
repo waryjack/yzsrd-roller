@@ -1,14 +1,11 @@
 {{log "Roll received by template: " roll}}
 <form class="yzsrd roll-dialog">
  <header class="roll-header taskroll-info">
-        <h1>Stepdice Roll | <span><a data-roll-id='{{roll}}'
-    
-        id="pushRoll" title="Push This Roll"><i class="fa-solid fa-circle-right"></i>
-    </a></span></h1>
+        <h1>Roll Results |  <a data-roll-id='{{roll}}' id="pushRoll" title="Push This Roll"><img src = "modules/yzsrd-roller/assets/icons/push.svg" style="margin-top:auto; margin-bottom:auto; border:0" height="36" width="36"/></a></h1>
 </header>
 <div class="taskroll-msg">
     <div class="flexrow">
-        <div class="flexcol" style="font-size:1.15em; border-right:4px solid black;">
+        <div class="flexcol" style="font-size:1.15em; flex-grow:2">
             <div style="background-color:lightgray; color:black">
                 <b>Base ({{statDie}}):</b> {{statResult}}
             </div>
@@ -22,15 +19,19 @@
                 <b>Artifact ({{artifactDie}}):</b> {{artifactResult}}
             </div>
         </div>
-    
-        <div class="flexcol" style="font-size:1.5em;">
-            <div style="border:1px solid gray; vertical-align:center; text-align:center; background-color:green; color:white;">
-                {{successes}}
-            </div>
-            <div style="border:1px solid gray; vertical-align:center; text-align:center; background-color:rgb(165, 25, 25); color:white;">
-                {{banes}}
+    </div>
+    <div class="flexrow" style="font-size:1.25em; align-items:center">
+        <div class="flexcol">
+            <div style="vertical-align:center; text-align:center; background-color:green; color:white;">
+                Successes: {{successes}}
             </div>
         </div>
+        <div class="flexcol">
+            <div style="vertical-align:center; text-align:center; background-color:rgb(165, 25, 25); color:white;">
+                Banes: {{banes}}
+            </div>
+        </div>
+
     </div>
     <!--table>
         <tr>

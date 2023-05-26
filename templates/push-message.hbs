@@ -1,16 +1,35 @@
 <form class="yzsrd roll-dialog">
  <header class="roll-header taskroll-info">
-        <h1>Pushed Roll Results</h1>
+        <h1>Pushed Roll Results <a data-roll-id='{{roll}}'
+    
+        id="pushRoll" title="Push This Roll"><i class="fa-solid fa-circle-right"></i>
+    </a></h1>
 </header>
 <div class="taskroll-msg">
-    <p> 
-    <b>Base Dice ({{statDie}}):</b> {{statResult}}
-    </p>
-    <p><b>Skill Dice ({{skillDie}}): </b>{{skillResult}}</p>
-    <p><b>Gear Dice ({{gearDie}}): </b>{{gearResult}}</p>
-    <p><b>Artifact Dice ({{artifactDie}}): </b>{{artifactResult}}</p>
-    <hr>
-    <p>SUCCESSES: {{successes}} || BANES: {{banes}}</p>
-
+    <div class="flexrow">
+        <div class="flexcol" style="font-size:1.15em; border-right:4px solid black;">
+            <div style="background-color:lightgray; color:black">
+                <b>Base ({{statDie}}):</b> {{statResult}}
+            </div>
+            <div >
+                <b>Base ({{skillDie}}):</b> {{skillResult}}
+            </div>
+            <div style="background-color:lightgray; color:black">
+                <b>Gear ({{gearDie}}):</b> {{gearResult}}
+            </div>
+            <div >
+                <b>Artifact ({{artifactDie}}):</b> {{artifactResult}}
+            </div>
+        </div>
+    
+        <div class="flexcol" style="font-size:1.5em;">
+            <div style="border:1px solid gray; vertical-align:center; text-align:center; background-color:green; color:white;">
+                {{successes}}
+            </div>
+            <div style="border:1px solid gray; vertical-align:center; text-align:center; background-color:rgb(165, 25, 25); color:white;">
+                {{banes}}
+            </div>
+        </div>
+    </div>
 </div>
 </form>

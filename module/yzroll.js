@@ -260,7 +260,7 @@ export class YZRoll {
         artRolls.unshift(ar.formula);
 
         let res = {
-            base:statRolls,
+            base: statRolls,
             skill: skillRolls,
             gear: gearRolls,
             artifact: artRolls

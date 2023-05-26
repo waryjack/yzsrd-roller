@@ -51,7 +51,7 @@ export class YZHandler {
             push = pushedRoll.isPush;
 
             msgData = {
-                roll: pushedRoll,
+                roll: JSON.stringify(pushedRoll),
                 statDie: outcome.base[0],
                 skillDie: outcome.skill[0],
                 gearDie: outcome.gear[0],
@@ -73,7 +73,7 @@ export class YZHandler {
             push = pushedRoll.isPush;
 
             msgData = {
-                roll: pushedRoll,
+                roll: JSON.stringify(pushedRoll),
                 statDie: outcome.base[0],
                 skillDie: outcome.skill[0],
                 gearDie: outcome.gear[0],
@@ -109,8 +109,8 @@ export class YZHandler {
                         callback: (html) => { /*collect and roll*/ 
 
                             let stepDice = game.settings.get("yzsrd-roller", "stepDice");
-                            let std = Number(html.find("#skillDice").val());
-                            let skd = Number(html.find("#statDice").val());
+                            let std = Number(html.find("#statDice").val());
+                            let skd = Number(html.find("#skillDice").val());
                             let grd = Number(html.find("#gearDice").val());
                             let ard = Number(html.find("#artifactDice").val());
                             let dmg = 0;

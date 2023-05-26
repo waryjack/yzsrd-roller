@@ -65,6 +65,7 @@ export class YZRoll {
     pushRoll() {
 
         this.successes = 0;
+        this.banes = 0;
         console.log("the pushed roll: ", this);
         let rollMode = 0;
         let keyArray = ["base", "skill", "gear", "artifact"];

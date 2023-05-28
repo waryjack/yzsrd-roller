@@ -248,6 +248,7 @@ export class YZRoll {
         ar.evaluate({async:false});
 
         console.log("statRolls result: ", str.terms[0].values);
+        console.log("statrolls result 2: ", str.result);
 
         let statRolls = str.terms[0].values; // str.result.split(" + ");
         let skillRolls = skr.terms[0].values;

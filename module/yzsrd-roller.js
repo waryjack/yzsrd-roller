@@ -6,6 +6,8 @@ console.log("Hello World! This code runs immediately when the file is loaded.");
 Hooks.on("init", function() {
   console.log("This code runs once the Foundry VTT software begins its initialization workflow.");
 
+  CONFIG.debug.hooks = true;
+
   registerSettings();
 });
 
@@ -19,6 +21,13 @@ Hooks.once("ready", function() {
 
         YZHandler.launchRoll();
     });
+
+   /* $(document).on('click', '#sheethead-roll', () => {
+
+
+      YZHandler.launchRoll();
+    })
+    */
 
 });
 
@@ -34,3 +43,22 @@ Hooks.on('renderChatMessage', (app, html) => {
      });
 
 });
+
+/* 
+function addButton(sheet, buttons) {
+  
+  console.log("Sheet: ", sheet);
+  buttons.unshift({
+    label: 'Roll Dice',
+		class: "",
+		icon: 'fas fa-dice',
+	
+	});
+  
+  
+  console.log("Buttons: ", buttons);
+}
+
+Hooks.on('getPDFActorSheetAdapterHeaderButtons', addButton);
+Hooks.on('getActorSheetHeaderButtons', addButton);
+*/

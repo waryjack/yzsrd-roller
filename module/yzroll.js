@@ -127,7 +127,7 @@ export class YZRoll {
 
      //Determine number of successes, banes, and assemble an array including only dice that remain pushable
      _parseSuccess(resultObject) {
-        let rollMode = 1;
+  
         let keyArray = ["base", "skill", "gear", "artifact"];
         if(this.stepDice) {
 
@@ -187,6 +187,9 @@ export class YZRoll {
         let gearRoll = 0;
         let artifactRoll = 0;
 
+        
+
+
         if (statExpr != "None") {
             statRoll = [new Roll(statExpr).evaluate({async:false}).total];
         } else {
@@ -219,6 +222,73 @@ export class YZRoll {
             artifact:[]
         };
 
+        // Construct DSN throw data
+        if(game.settings.get("yzsrd-roller", "dsn")) {
+            let thrownDie = {};
+            let diceArray = [];
+
+            if(statRoll != "-") {
+                thrownDie = {
+                    result: statRoll,
+                    resultLabel:statRoll,
+                    type: statExpr.substring(1),
+                    vectors:[],
+                    options:{colorset:'black'}
+                }
+
+                diceArray.push(thrownDie);
+            }
+
+            if(skillRoll != "-") {
+                thrownDie = {
+                    result:skillRoll,
+                    resultLabel:skillRoll,
+                    type:skillExpr.substring(1),
+                    vectors:[],
+                    options:{colorset:'blue'}
+                }
+
+                diceArray.push(thrownDie);
+            }
+
+            if(gearRoll != "-") {
+                thrownDie = {
+                    result:gearRoll,
+                    resultLabel: gearRoll,
+                    type:gearExpr.substring(1),
+                    vectors:[],
+                    options:{colorset:'red'}
+                }
+
+                diceArray.push(thrownDie);
+            }
+
+            if(artifactRoll != "-") {
+                thrownDie = {
+                    result:artifactRoll,
+                    resultLabel:artifactRoll,
+                    type:artExpr.substring(1),
+                    vectors:[],
+                    options:{colorset:'yellow'}
+                }
+
+                diceArray.push(thrownDie)
+            }
+
+           let diceData = {
+                throws:[
+                    {
+                        dice:diceArray
+                    }
+                ]
+           }
+
+           console.log("Step Dice DSN data: ", diceData);
+
+           game.dice3d.show(diceData, game.user, true);
+
+        }
+
         res.base[0] = statExpr;
         res.base[1] = statRoll;
         res.skill[0]= skillExpr;
@@ -247,19 +317,157 @@ export class YZRoll {
         let ar = new Roll(this.artDice+"d6");
         ar.evaluate({async:false});
 
+        console.log("statRolls formula: ", str.formula);
         console.log("statRolls result: ", str.terms[0].values);
         console.log("statrolls result 2: ", str.result);
+
+       
 
         let statRolls = str.terms[0].values; // str.result.split(" + ");
         let skillRolls = skr.terms[0].values;
         let gearRolls = gr.terms[0].values;
         let artRolls = ar.terms[0].values;
 
+        // Testing Dice So Nice! integration
+
+        if(game.settings.get("yzsrd-roller", "dsn")) {
+
+            let statThrowArray = [];
+            let skillThrowArray = [];
+            let gearThrowArray = [];
+            let artThrowArray = [];
+            let tmpDice = [];
+
+            // Build roll sets individually (these iterations can be combined later for efficiency; right now
+            // just learning how to use the DSN API)
+
+            statRolls.forEach(d => {
+                let thrownDie = {
+                    result:d,
+                    resultLabel:d,
+                    type: "d6",
+                    vectors:[],
+                    options:{colorset:"black"}
+                }
+
+                statThrowArray.push(thrownDie);
+            }); 
+    
+            statThrowArray.forEach(t => {
+                tmpDice.push(t);
+                
+
+            })
+            
+            let statThrowFinal = {
+                throws:[
+                    {
+                        dice:tmpDice
+                    }
+                ]
+            }
+
+            // Build skill roll set (rinse and repeat)
+            tmpDice = [];
+
+            skillRolls.forEach(d => {
+                let thrownDie = {
+                    result:d,
+                    resultLabel:d,
+                    type: "d6",
+                    vectors:[],
+                    options:{colorset:"blue"}
+                }
+
+                skillThrowArray.push(thrownDie);
+            }); 
+    
+            skillThrowArray.forEach(t => {
+                tmpDice.push(t);
+            })
+            
+            let skillThrowFinal = {
+                throws:[
+                    {
+                        dice:tmpDice
+                    }
+                ]
+            }
+
+             // Build gear roll set (rinse and repeat)
+             tmpDice = [];
+
+             gearRolls.forEach(d => {
+                 let thrownDie = {
+                     result:d,
+                     resultLabel:d,
+                     type: "d6",
+                     vectors:[],
+                     options:{colorset:"red"}
+                 }
+ 
+                 gearThrowArray.push(thrownDie);
+             }); 
+     
+             gearThrowArray.forEach(t => {
+                 tmpDice.push(t);
+             })
+             
+             let gearThrowFinal = {
+                 throws:[
+                     {
+                         dice:tmpDice
+                     }
+                 ]
+             }
+
+             // Build artifact/special set 
+
+              // Build skill roll set (rinse and repeat)
+            tmpDice = [];
+
+            artRolls.forEach(d => {
+                let thrownDie = {
+                    result:d,
+                    resultLabel:d,
+                    type: "d6",
+                    vectors:[],
+                    options:{colorset:"yellow"}
+                }
+
+                artThrowArray.push(thrownDie);
+            }); 
+    
+            artThrowArray.forEach(t => {
+                tmpDice.push(t);
+            })
+            
+            let artThrowFinal = {
+                throws:[
+                    {
+                        dice:tmpDice
+                    }
+                ]
+            }
+
+
+
+
+            game.dice3d.show(statThrowFinal, game.user, true);
+            game.dice3d.show(skillThrowFinal, game.user, true);
+            game.dice3d.show(gearThrowFinal, game.user, true);
+            game.dice3d.show(artThrowFinal, game.user, true);
+
+        }
+
         statRolls.unshift(str.formula);
         skillRolls.unshift(skr.formula);
         gearRolls.unshift(gr.formula);
         artRolls.unshift(ar.formula);
 
+
+
+       
         let res = {
             base: statRolls,
             skill: skillRolls,

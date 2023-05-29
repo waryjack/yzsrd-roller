@@ -9,5 +9,12 @@ export const registerSettings = function() {
         default: false
     });
 
-
+    game.settings.register("yzsrd-roller", 'dsn', {
+        name: 'Use Dice So Nice!',
+        hint: 'Enable use of the Dice So Nice! plugin',
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false
+    });
 }

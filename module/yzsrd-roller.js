@@ -22,12 +22,12 @@ Hooks.once("ready", function() {
         YZHandler.launchRoll();
     });
 
-   /* $(document).on('click', '#sheethead-roll', () => {
+   $(document).on('click', '.yzsrd-sheet-header-roll', () => {
 
 
       YZHandler.launchRoll();
     })
-    */
+   
 
 });
 
@@ -44,21 +44,18 @@ Hooks.on('renderChatMessage', (app, html) => {
 
 });
 
-/* 
 function addButton(sheet, buttons) {
   
   console.log("Sheet: ", sheet);
   buttons.unshift({
     label: 'Roll Dice',
-		class: "",
+		class: "yzsrd-sheet-header-roll",
 		icon: 'fas fa-dice',
-	
+    onclick: () => {}
 	});
   
   
   console.log("Buttons: ", buttons);
 }
 
-Hooks.on('getPDFActorSheetAdapterHeaderButtons', addButton);
 Hooks.on('getActorSheetHeaderButtons', addButton);
-*/

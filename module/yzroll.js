@@ -73,29 +73,67 @@ export class YZRoll {
         let keyArray = ["base", "skill", "gear", "artifact"];
         let res = this.rollResults;
 
+        let thrownDie = {};
+        let diceArray = [];
+        let diceData = {};
+        let color = "";
+
         if(this.stepDice) {
             keyArray.forEach(k => {
-
+                    switch(k) {
+                        case "base": color = "black"; break;
+                        case "skill": color = "blue"; break;
+                        case "gear": color = "green"; break;
+                        case "artifact": color = "red"; break;
+                    }
                     let rerollExpr = res[k][0];
                     if(res[k][1] == 1 || res[k][1] == "-") {
                         //do nothing
                     } else {
                         let reroll = new Roll(rerollExpr).evaluate({async:false});
                         res[k][1] = reroll.total;
+
+                        thrownDie = {
+                            result: reroll.total,
+                            resultLabel:reroll.total,
+                            type: rerollExpr.substring(1),
+                            vectors:[],
+                            options:{colorset:color}
+                        }
+        
+                        diceArray.push(thrownDie);
                     }
                 
 
             });
 
+            diceData = {
+                throws:[
+                    {
+                        dice:diceArray
+                    }
+                ]
+           }
+
             console.log("REsults after push: ", res);
             this.rollResults = res;
             this.isPush = true;
+            if(game.settings.get('yzsrd-roller', 'dsn') && game.modules.get('dice-so-nice')?.active) {
+                game.dice3d.show(diceData, game.user, true);
+            }
+            
 
         } else {
 
             keyArray.forEach(k => {
 
                 // let rerollExpr = res[k][0];
+                switch(k) {
+                    case "base": color = "black"; break;
+                    case "skill": color = "blue"; break;
+                    case "gear": color = "green"; break;
+                    case "artifact": color = "red"; break;
+                }
                 
                 res[k].forEach(v => {
                     if(res[k].indexOf(v) == 0) {
@@ -107,18 +145,41 @@ export class YZRoll {
                         let loc = res[k].indexOf(v);
                         res[k][loc] = reroll.result;
                         
+                        let thrownDie = {
+                                result:reroll.result,
+                                resultLabel:reroll.result,
+                                type: "d6",
+                                vectors:[],
+                                options:{colorset:color}
+                        }
+            
+                        diceArray.push(thrownDie);
                     }
 
 
                 });
                
             });    
-            
 
+            diceData = {
+                throws:[
+                    {
+                        dice:diceArray
+                    }
+                ]
+           }
+            
+            this.rollResults = res;
+            if(game.settings.get('yzsrd-roller', 'dsn') && game.modules.get('dice-so-nice')?.active) {
+                game.dice3d.show(diceData, game.user, true);
+            }
         }
 
+
+
         console.log("REsults after push: ", res);
-        this.rollResults = res;
+       
+        this.diceDisplay = this.createDiceImgs();
         this.isPush = true;
 
         this._parseSuccess(res);
@@ -186,14 +247,20 @@ export class YZRoll {
         let skillRoll = 0;
         let gearRoll = 0;
         let artifactRoll = 0;
+        let statImg = "modules/yzsrd-roller/assets/dice_black";
+        let skillImg = "modules/yzsrd-roller/assets/dice_blue";
+        let gearImg = "modules/yzsrd-roller/assets/dice_green";
+        let artImg = "modules/yzsrd-roller/assets/dice_red";
 
-        
 
 
         if (statExpr != "None") {
             statRoll = [new Roll(statExpr).evaluate({async:false}).total];
+           /* statImg += `/${statExpr.substring(1)}-${statRoll}.png`;
+            statImg = `<img src="${statImg}" height="36" width="36" style="border:0px !important;">`;*/
         } else {
             statRoll = "-"
+            statImg = ""
         }
 
         if (skillExpr != "None") {
@@ -223,7 +290,7 @@ export class YZRoll {
         };
 
         // Construct DSN throw data
-        if(game.settings.get("yzsrd-roller", "dsn")) {
+        if(game.settings.get("yzsrd-roller", "dsn") && game.modules.get('dice-so-nice')?.active) {
             let thrownDie = {};
             let diceArray = [];
 
@@ -257,7 +324,7 @@ export class YZRoll {
                     resultLabel: gearRoll,
                     type:gearExpr.substring(1),
                     vectors:[],
-                    options:{colorset:'red'}
+                    options:{colorset:'green'}
                 }
 
                 diceArray.push(thrownDie);
@@ -269,7 +336,7 @@ export class YZRoll {
                     resultLabel:artifactRoll,
                     type:artExpr.substring(1),
                     vectors:[],
-                    options:{colorset:'yellow'}
+                    options:{colorset:'red'}
                 }
 
                 diceArray.push(thrownDie)
@@ -297,9 +364,12 @@ export class YZRoll {
         res.gear[1] = gearRoll;
         res.artifact[0] = artExpr;
         res.artifact[1] = artifactRoll
+        res.statImg = statImg;
+
+       
         
         this.rollResults = res;
-
+        this.diceDisplay = this.createDiceImgs();
         this._parseSuccess(res);
      }
 
@@ -330,7 +400,7 @@ export class YZRoll {
 
         // Testing Dice So Nice! integration
 
-        if(game.settings.get("yzsrd-roller", "dsn")) {
+        if(game.settings.get("yzsrd-roller", "dsn") && game.modules.get('dice-so-nice')?.active) {
 
             let statThrowArray = [];
             let skillThrowArray = [];
@@ -403,7 +473,7 @@ export class YZRoll {
                      resultLabel:d,
                      type: "d6",
                      vectors:[],
-                     options:{colorset:"red"}
+                     options:{colorset:"green"}
                  }
  
                  gearThrowArray.push(thrownDie);
@@ -432,7 +502,7 @@ export class YZRoll {
                     resultLabel:d,
                     type: "d6",
                     vectors:[],
-                    options:{colorset:"yellow"}
+                    options:{colorset:"red"}
                 }
 
                 artThrowArray.push(thrownDie);
@@ -476,7 +546,7 @@ export class YZRoll {
         }
 
         this.rollResults = res;
-
+        this.diceDisplay = this.createDiceImgs();
         this._parseSuccess(res);
 
      }
@@ -492,5 +562,49 @@ export class YZRoll {
             }
 
             return expr;
+    }
+
+    createDiceImgs() {
+        let statImg = "modules/yzsrd-roller/assets/dice_black";
+        let skillImg = "modules/yzsrd-roller/assets/dice_blue";
+        let gearImg = "modules/yzsrd-roller/assets/dice_green";
+        let artImg = "modules/yzsrd-roller/assets/dice_red";
+        let keyArray = ["base", "skill", "gear", "artifact"];
+        let imgString = "";
+        let imgBase = "";
+
+        let r = this.rollResults;
+
+        console.log("Roll results for createDiceImgs: ", r);
+
+        keyArray.forEach(key => {
+            switch(key) {
+                case "base": imgBase = statImg; break;
+                case "skill": imgBase = skillImg; break;
+                case "gear": imgBase= gearImg; break;
+                case "artifact": imgBase = artImg; break;
+                default: imgBase = skillImg;
+            }
+
+            console.log("Key in roll results: ", r[key]);
+
+            if (Array.isArray(r[key]) && r[key].length != 0) {
+                let dieCode = r[key][0].substring(1);
+                let justResults = r[key].slice(1);
+                console.log("Just results shifted array: ", justResults);
+                justResults.forEach(result => {
+                    if(dieCode === "one" || result === "-") {
+                        // do nothing, no code
+                    } else {
+                        imgString = imgString + `<img class="yzsrd-img" src="${imgBase}/${dieCode}-${result}.png" height="36" border="0" width="36" style="border:0px;">`;
+                    }
+                })
+            }
+
+        })
+        
+        return imgString;
+
+
     }
 }

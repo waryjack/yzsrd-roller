@@ -49,6 +49,7 @@ export class YZHandler {
             sux = pushedRoll.successes;
             banes = pushedRoll.banes;
             push = pushedRoll.isPush;
+            let diceImgs = new Handlebars.SafeString(pushedRoll.diceDisplay);
 
             msgData = {
                 roll: JSON.stringify(pushedRoll),
@@ -63,7 +64,8 @@ export class YZHandler {
                 sb: sb,
                 successes: sux,
                 banes: banes,
-                isPush: push
+                isPush: push,
+                imgs:diceImgs
             }
 
         } else {
@@ -71,6 +73,7 @@ export class YZHandler {
             sux = pushedRoll.successes;
             banes = pushedRoll.banes;
             push = pushedRoll.isPush;
+            let diceImgs = new Handlebars.SafeString(pushedRoll.diceDisplay);
 
             msgData = {
                 roll: JSON.stringify(pushedRoll),
@@ -85,7 +88,8 @@ export class YZHandler {
                 sb: sb,
                 successes: sux,
                 banes: banes,
-                isPush: push
+                isPush: push,
+                imgs:diceImgs
             }
         }
                             
@@ -134,6 +138,7 @@ export class YZHandler {
                                 let sux = thisRoll.successes;
                                 let banes = thisRoll.banes;
                                 let push = thisRoll.isPush;
+                                let diceImgs = new Handlebars.SafeString(thisRoll.diceDisplay);
     
                                 msgData = {
                                     roll: JSON.stringify(thisRoll),
@@ -148,7 +153,8 @@ export class YZHandler {
                                     sb: sb,
                                     successes: sux,
                                     banes: banes,
-                                    isPush: push
+                                    isPush: push,
+                                    imgs: diceImgs
                                 }
                             } else {
                                 thisRoll.doPoolRoll();
@@ -160,6 +166,7 @@ export class YZHandler {
                                 let sux = thisRoll.successes;
                                 let banes = thisRoll.banes;
                                 let push = thisRoll.isPush;
+                                let diceImgs = new Handlebars.SafeString(thisRoll.diceDisplay);
     
                                 msgData = {
                                     roll: JSON.stringify(thisRoll),
@@ -174,7 +181,8 @@ export class YZHandler {
                                     sb: sb,
                                     successes: sux,
                                     banes: banes,
-                                    isPush: push
+                                    isPush: push,
+                                    imgs: diceImgs
                                 }
                             }
 

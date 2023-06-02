@@ -19,7 +19,7 @@
   ],
   "socket": true,
   "styles": [
-      "./css/style.css"
+      "./style/style.css"
   ],
   "languages": [
       {

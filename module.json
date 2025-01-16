@@ -3,11 +3,11 @@
   "name": "yzsrd-roller",
   "title": "Year Zero Dice Roller",
   "description": "Generic simple dice roller for Year Zero games",
-  "version": "1.2",
+  "version": "1.3",
   "compatibility": {
       "minimum": 10,
-      "maximum": 11,
-      "verified":11
+      "maximum": 12,
+      "verified":12
   },
   "authors": [
       {

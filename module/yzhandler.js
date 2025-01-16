@@ -25,13 +25,13 @@ export class YZHandler {
 
     }
 
-    static pushRoll(roll) {
+    static async pushRoll(roll) {
 
         let pushedRollData = JSON.parse(roll);
         console.log("triggered push");
         console.log("Roll from Push Click: ", pushedRollData);
         let pushedRoll = new YZRoll(pushedRollData, true);
-        pushedRoll.pushRoll();
+        await pushedRoll.pushRoll();
 
         let stepDice = game.settings.get("yzsrd-roller", "stepDice");
         let outcome = pushedRoll.rollResults;
@@ -49,7 +49,7 @@ export class YZHandler {
             sux = pushedRoll.successes;
             banes = pushedRoll.banes;
             push = pushedRoll.isPush;
-            let diceImgs = new Handlebars.SafeString(pushedRoll.diceDisplay);
+            let diceImgs = await new Handlebars.SafeString(pushedRoll.diceDisplay);
 
             msgData = {
                 roll: JSON.stringify(pushedRoll),
@@ -73,7 +73,7 @@ export class YZHandler {
             sux = pushedRoll.successes;
             banes = pushedRoll.banes;
             push = pushedRoll.isPush;
-            let diceImgs = new Handlebars.SafeString(pushedRoll.diceDisplay);
+            let diceImgs = await new Handlebars.SafeString(pushedRoll.diceDisplay);
 
             msgData = {
                 roll: JSON.stringify(pushedRoll),
@@ -110,7 +110,7 @@ export class YZHandler {
                     roll: {
                         icon: '<i class="fas fa-check"></i>',
                         label: "Roll",
-                        callback: (html) => { /*collect and roll*/ 
+                        callback: async (html) => { /*collect and roll*/ 
 
                             let stepDice = game.settings.get("yzsrd-roller", "stepDice");
                             let std = Number(html.find("#statDice").val());
@@ -130,7 +130,7 @@ export class YZHandler {
 
                             let thisRoll = new YZRoll(rdata, false);
                             if(stepDice) {
-                                thisRoll.doStepRoll();
+                                await thisRoll.doStepRoll();
                                 console.log(thisRoll);
 
                                 let outcome = thisRoll.rollResults;
@@ -138,7 +138,7 @@ export class YZHandler {
                                 let sux = thisRoll.successes;
                                 let banes = thisRoll.banes;
                                 let push = thisRoll.isPush;
-                                let diceImgs = new Handlebars.SafeString(thisRoll.diceDisplay);
+                                let diceImgs = await new Handlebars.SafeString(thisRoll.diceDisplay);
     
                                 msgData = {
                                     roll: JSON.stringify(thisRoll),
@@ -157,7 +157,7 @@ export class YZHandler {
                                     imgs: diceImgs
                                 }
                             } else {
-                                thisRoll.doPoolRoll();
+                                await thisRoll.doPoolRoll();
 
                                 console.log(thisRoll);
 
@@ -166,7 +166,7 @@ export class YZHandler {
                                 let sux = thisRoll.successes;
                                 let banes = thisRoll.banes;
                                 let push = thisRoll.isPush;
-                                let diceImgs = new Handlebars.SafeString(thisRoll.diceDisplay);
+                                let diceImgs = await new Handlebars.SafeString(thisRoll.diceDisplay);
     
                                 msgData = {
                                     roll: JSON.stringify(thisRoll),
@@ -238,8 +238,7 @@ export class YZHandler {
             renderTemplate(template, data).then((msg)=>{
                 ChatMessage.create({
                     user: game.user._id,
-                    // roll: data.roll,
-                    type:CONST.CHAT_MESSAGE_TYPES.ROLL,
+                    //styles:[CONST.CHAT_MESSAGE_TYPES.ROLL],
                     speaker: ChatMessage.getSpeaker(),
                     content: msg
                 });

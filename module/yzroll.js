@@ -64,7 +64,7 @@ export class YZRoll {
      * @param {Roll} the roll to push
      * @param {Actor} the actor triggering the push
      */
-    pushRoll() {
+    async pushRoll() {
 
         this.successes = 0;
         this.banes = 0;
@@ -79,7 +79,7 @@ export class YZRoll {
         let color = "";
 
         if(this.stepDice) {
-            keyArray.forEach(k => {
+            for (const k of keyArray) {
                     switch(k) {
                         case "base": color = "black"; break;
                         case "skill": color = "blue"; break;
@@ -90,7 +90,7 @@ export class YZRoll {
                     if(res[k][1] == 1 || res[k][1] == "-") {
                         //do nothing
                     } else {
-                        let reroll = new Roll(rerollExpr).evaluate({async:false});
+                        let reroll = await new Roll(rerollExpr).evaluate();
                         res[k][1] = reroll.total;
 
                         thrownDie = {
@@ -105,7 +105,7 @@ export class YZRoll {
                     }
                 
 
-            });
+            };
 
             diceData = {
                 throws:[
@@ -125,7 +125,7 @@ export class YZRoll {
 
         } else {
 
-            keyArray.forEach(k => {
+            for (const k of keyArray) {
 
                 // let rerollExpr = res[k][0];
                 switch(k) {
@@ -134,14 +134,13 @@ export class YZRoll {
                     case "gear": color = "green"; break;
                     case "artifact": color = "red"; break;
                 }
-                
-                res[k].forEach(v => {
+                for (const v of res[k]) {
                     if(res[k].indexOf(v) == 0) {
                         //do nothing
                     } else if(v == 1 || v == "-") {
                         //do nothing
                     } else {
-                        let reroll = new Roll("1d6").evaluate({async:false});
+                        let reroll = await new Roll("1d6").evaluate();
                         let loc = res[k].indexOf(v);
                         res[k][loc] = reroll.result;
                         
@@ -157,9 +156,9 @@ export class YZRoll {
                     }
 
 
-                });
+                };
                
-            });    
+            };    
 
             diceData = {
                 throws:[
@@ -237,7 +236,7 @@ export class YZRoll {
 
      }
 
-     doStepRoll() {
+     async doStepRoll() {
         
         let statExpr = this.getDieExpression(this.statDice);
         let skillExpr = this.getDieExpression(this.skillDice);
@@ -255,7 +254,8 @@ export class YZRoll {
 
 
         if (statExpr != "None") {
-            statRoll = [new Roll(statExpr).evaluate({async:false}).total];
+            let sr = await new Roll(statExpr).evaluate();
+            statRoll = sr.total;
            /* statImg += `/${statExpr.substring(1)}-${statRoll}.png`;
             statImg = `<img src="${statImg}" height="36" width="36" style="border:0px !important;">`;*/
         } else {
@@ -264,19 +264,22 @@ export class YZRoll {
         }
 
         if (skillExpr != "None") {
-            skillRoll = [new Roll(skillExpr).evaluate({async:false}).total];
+            let skr = await new Roll(skillExpr).evaluate();
+            skillRoll = skr.total;
         } else {
             skillRoll = "-"
         }
 
         if(gearExpr != "None") {
-            gearRoll = [new Roll(gearExpr).evaluate({async:false}).total];
+            let gr = await new Roll(gearExpr).evaluate();
+            gearRoll = gr.total;
         } else {
             gearRoll = "-"
         }
 
         if(artExpr != "None") {
-            artifactRoll = [new Roll(artExpr).evaluate({async:false}).total];
+            let ar = await new Roll(artExpr).evaluate();
+            artifactRoll = ar.total;
         } else {
             artifactRoll = "-"
         }
@@ -367,7 +370,7 @@ export class YZRoll {
         res.statImg = statImg;
 
        
-        
+        console.log("Res: ", res);
         this.rollResults = res;
         this.diceDisplay = this.createDiceImgs();
         this._parseSuccess(res);
@@ -375,17 +378,13 @@ export class YZRoll {
 
      
 
-     doPoolRoll() {
+     async doPoolRoll() {
 
-        let str = new Roll(this.statDice+"d6");
-        str.evaluate({async:false});
-        console.log("Basic Roll: ", str); 
-        let skr = new Roll(this.skillDice+"d6");
-        skr.evaluate({async:false});
-        let gr = new Roll(this.gearDice+"d6");
-        gr.evaluate({async:false});
-        let ar = new Roll(this.artDice+"d6");
-        ar.evaluate({async:false});
+        let str = await new Roll(this.statDice+"d6").evaluate();
+        let skr = await new Roll(this.skillDice+"d6").evaluate();
+        let gr = await new Roll(this.gearDice+"d6").evaluate();
+        let ar = await new Roll(this.artDice+"d6").evaluate();
+        
 
         console.log("statRolls formula: ", str.formula);
         console.log("statRolls result: ", str.terms[0].values);

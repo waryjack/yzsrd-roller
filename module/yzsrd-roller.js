@@ -8,6 +8,9 @@ Hooks.on("init", function() {
 
   CONFIG.debug.hooks = false;
 
+  // globalThis.YZHandler = YZHandler;
+  game.modules.get('yzsrd-roller').yzlauncher = YZHandler;
+
   registerSettings();
 });
 
